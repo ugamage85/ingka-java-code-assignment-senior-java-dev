@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -14,11 +15,12 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Table(name = "warehouse")
 @Cacheable
 public class DbWarehouse {
 
-  @Id @GeneratedValue public Long id;
+  @Id @GeneratedValue private Long id;
 
   private String businessUnitCode;
 

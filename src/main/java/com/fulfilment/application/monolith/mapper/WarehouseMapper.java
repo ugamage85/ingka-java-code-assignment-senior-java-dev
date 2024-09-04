@@ -8,4 +8,5 @@ import org.mapstruct.Mapper;
 public interface WarehouseMapper {
     DbWarehouse toEntity(Warehouse warehouse);
     Warehouse toModel(DbWarehouse entity);
+    Warehouse toModel(com.warehouse.api.beans.Warehouse warehouseBean);
 }

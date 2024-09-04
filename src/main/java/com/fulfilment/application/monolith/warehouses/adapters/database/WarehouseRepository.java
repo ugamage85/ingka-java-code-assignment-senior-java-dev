@@ -6,9 +6,8 @@ import com.fulfilment.application.monolith.warehouses.domain.ports.WarehouseStor
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import lombok.AllArgsConstructor;
+import jakarta.ws.rs.WebApplicationException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
@@ -21,25 +20,38 @@ public class WarehouseRepository implements WarehouseStore, PanacheRepository<Db
 
   @Override
   public void create(Warehouse warehouse) {
-    var entity = warehouseMapper.toEntity(warehouse);
-    this.persist(entity);
+    var warehouseEntity = warehouseMapper.toEntity(warehouse);
+    this.persist(warehouseEntity);
   }
 
   @Override
   public void update(Warehouse warehouse) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'replace'");
+    DbWarehouse entity = find("businessUnitCode", warehouse.getBusinessUnitCode()).firstResult();
+    if (entity == null){
+      throw new WebApplicationException("Warehouse with Business Unit Code " + warehouse.getBusinessUnitCode() + " not found", 404);
+    }
+    //todo: updatedAt is not presence. check later
+    entity.setLocation(warehouse.getLocation());
+    entity.setCapacity(warehouse.getCapacity());
+    entity.setStock(warehouse.getStock());
+    this.persist(entity);
   }
 
   @Override
   public void remove(Warehouse warehouse) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'remove'");
+    DbWarehouse entity = find("businessUnitCode", warehouse.getBusinessUnitCode()).firstResult();
+    if (entity == null){
+      throw new WebApplicationException("Warehouse with Business Unit Code " + warehouse.getBusinessUnitCode() + " not found", 404);
+    }
+    this.delete(entity);
   }
 
   @Override
   public Warehouse findByBusinessUnitCode(String buCode) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'findById'");
+    DbWarehouse entity = find("businessUnitCode", buCode).firstResult();
+    if (entity == null){
+      throw new WebApplicationException("Warehouse with Business Unit Code " + buCode + " not found", 404);
+    }
+    return warehouseMapper.toModel(entity);
   }
 }
