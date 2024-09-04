@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.TransactionSynchronizationRegistry;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -20,6 +21,7 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import java.util.List;
 import org.jboss.logging.Logger;
+import util.AfterCommitExecutor;
 
 @Path("store")
 @ApplicationScoped
@@ -27,7 +29,10 @@ import org.jboss.logging.Logger;
 @Consumes("application/json")
 public class StoreResource {
 
-  @Inject LegacyStoreManagerGateway legacyStoreManagerGateway;
+  @Inject
+  LegacyStoreManagerGateway legacyStoreManagerGateway;
+  @Inject
+  TransactionSynchronizationRegistry transactionSynchronizationRegistry;
 
   private static final Logger LOGGER = Logger.getLogger(StoreResource.class.getName());
 
@@ -55,7 +60,11 @@ public class StoreResource {
 
     store.persist();
 
-    legacyStoreManagerGateway.createStoreOnLegacySystem(store);
+    transactionSynchronizationRegistry.registerInterposedSynchronization(new AfterCommitExecutor(() -> {
+      legacyStoreManagerGateway.createStoreOnLegacySystem(store);
+    }));
+
+    //legacyStoreManagerGateway.createStoreOnLegacySystem(store);
 
     return Response.ok(store).status(201).build();
   }
