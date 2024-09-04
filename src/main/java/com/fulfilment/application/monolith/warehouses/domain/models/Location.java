@@ -1,17 +1,18 @@
 package com.fulfilment.application.monolith.warehouses.domain.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@Builder
+@AllArgsConstructor
+@EqualsAndHashCode
 public class Location {
-  public String identification;
-
+  private String identification;
   // maximum number of warehouses that can be created in this location
-  public int maxNumberOfWarehouses;
-
+  private int maxNumberOfWarehouses;
   // maximum capacity of the location summing all the warehouse capacities
-  public int maxCapacity;
-
-  public Location(String identification, int maxNumberOfWarehouses, int maxCapacity) {
-    this.identification = identification;
-    this.maxNumberOfWarehouses = maxNumberOfWarehouses;
-    this.maxCapacity = maxCapacity;
-  }
+  private int maxCapacity;
 }
