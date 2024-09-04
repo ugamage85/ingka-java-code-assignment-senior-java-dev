@@ -6,30 +6,37 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "warehouse")
 @Cacheable
 public class DbWarehouse {
 
   @Id @GeneratedValue public Long id;
 
-  public String businessUnitCode;
+  private String businessUnitCode;
 
-  public String location;
+  private String location;
 
-  public Integer capacity;
+  private Integer capacity;
 
-  public Integer stock;
+  private Integer stock;
 
-  public LocalDateTime createdAt;
+  private LocalDateTime createdAt;
 
-  public LocalDateTime archivedAt;
+  private LocalDateTime archivedAt;
 
-  public DbWarehouse() {}
 
-  public Warehouse toWarehouse() {
+
+  //public DbWarehouse() {}
+
+  /*public Warehouse toWarehouse() {
     var warehouse = new Warehouse();
     warehouse.businessUnitCode = this.businessUnitCode;
     warehouse.location = this.location;
@@ -38,5 +45,5 @@ public class DbWarehouse {
     warehouse.createdAt = this.createdAt;
     warehouse.archivedAt = this.archivedAt;
     return warehouse;
-  }
+  }*/
 }
