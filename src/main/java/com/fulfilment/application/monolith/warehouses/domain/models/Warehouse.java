@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class Warehouse {
-
   // unique identifier
   private String businessUnitCode;
 

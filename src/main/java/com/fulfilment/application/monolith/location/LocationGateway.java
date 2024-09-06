@@ -2,11 +2,13 @@ package com.fulfilment.application.monolith.location;
 
 import com.fulfilment.application.monolith.warehouses.domain.models.Location;
 import com.fulfilment.application.monolith.warehouses.domain.ports.LocationResolver;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.WebApplicationException;
 import util.LocationGatewayException;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@ApplicationScoped
 public class LocationGateway implements LocationResolver {
 
   private static final List<Location> locations = new ArrayList<>();
@@ -24,6 +26,6 @@ public class LocationGateway implements LocationResolver {
 
   @Override
   public Location resolveByIdentifier(String identifier) {
-    return locations.stream().filter(location -> location.getIdentification().equals(identifier)).findFirst().orElseThrow(() -> new LocationGatewayException(String.format("location,%s not found", identifier)));
+    return locations.stream().filter(location -> location.getIdentification().equals(identifier)).findFirst().orElseThrow(() -> new WebApplicationException("Location with identifer " + identifier + " not found", 404));
   }
 }

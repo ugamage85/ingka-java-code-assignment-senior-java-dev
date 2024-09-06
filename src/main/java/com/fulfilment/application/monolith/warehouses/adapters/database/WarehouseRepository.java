@@ -8,7 +8,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class WarehouseRepository implements WarehouseStore, PanacheRepository<DbWarehouse> {
@@ -21,6 +23,8 @@ public class WarehouseRepository implements WarehouseStore, PanacheRepository<Db
   @Override
   public void create(Warehouse warehouse) {
     var warehouseEntity = warehouseMapper.toEntity(warehouse);
+    warehouseEntity.setCreatedAt(LocalDateTime.now());
+    warehouseEntity.setArchivedAt(null);
     this.persist(warehouseEntity);
   }
 
@@ -48,7 +52,8 @@ public class WarehouseRepository implements WarehouseStore, PanacheRepository<Db
 
   @Override
   public Warehouse findByBusinessUnitCode(String buCode) {
-    DbWarehouse entity = find("businessUnitCode", buCode).firstResult();
+    //DbWarehouse entity = find("businessUnitCode", buCode).firstResult();
+    DbWarehouse entity = find("businessUnitCode = ?1 and archivedAt is null", buCode).firstResult();
     if (entity == null){
       throw new WebApplicationException("Warehouse with Business Unit Code " + buCode + " not found", 404);
     }
