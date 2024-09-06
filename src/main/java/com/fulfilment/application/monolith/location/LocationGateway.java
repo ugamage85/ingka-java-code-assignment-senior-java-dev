@@ -16,7 +16,7 @@ public class LocationGateway implements LocationResolver {
   static {
     locations.add(new Location("ZWOLLE-001", 1, 40));
     locations.add(new Location("ZWOLLE-002", 2, 50));
-    locations.add(new Location("AMSTERDAM-001", 5, 100));
+    locations.add(new Location("AMSTERDAM-001", 50, 100));
     locations.add(new Location("AMSTERDAM-002", 3, 75));
     locations.add(new Location("TILBURG-001", 1, 40));
     locations.add(new Location("HELMOND-001", 1, 45));

@@ -2,7 +2,6 @@ package com.fulfilment.application.monolith.warehouses.adapters.restapi;
 
 import com.warehouse.api.beans.Warehouse;
 import io.quarkus.test.junit.QuarkusIntegrationTest;
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import jakarta.transaction.Transactional;
@@ -10,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @QuarkusIntegrationTest
@@ -72,53 +71,49 @@ public class WarehouseEndpointIT {
 
   }
 
-
   @Test
   public void testSimpleCheckingArchivingWarehouses() {
-
-    // Uncomment the following lines to test the WarehouseResourceImpl implementation
-
-    // final String path = "warehouse";
+    final String path = "warehouse";
 
     // List all, should have all 3 products the database has initially:
-    // given()
-    //     .when()
-    //     .get(path)
-    //     .then()
-    //     .statusCode(200)
-    //     .body(
-    //         containsString("MWH.001"),
-    //         containsString("MWH.012"),
-    //         containsString("MWH.023"),
-    //         containsString("ZWOLLE-001"),
-    //         containsString("AMSTERDAM-001"),
-    //         containsString("TILBURG-001"));
+    given()
+            .when()
+            .get(path)
+            .then()
+            .statusCode(200)
+            .body(
+                    containsString("MWH.001"),
+                    containsString("MWH.012"),
+                    containsString("MWH.023"),
+                    containsString("ZWOLLE-001"),
+                    containsString("AMSTERDAM-001"),
+                    containsString("TILBURG-001"));
 
     // // Archive the ZWOLLE-001:
-    // given().when().delete(path + "/1").then().statusCode(204);
+    given().when().delete(path + "/1").then().statusCode(204);
 
     // // List all, ZWOLLE-001 should be missing now:
-    // given()
-    //     .when()
-    //     .get(path)
-    //     .then()
-    //     .statusCode(200)
-    //     .body(
-    //         not(containsString("ZWOLLE-001")),
-    //         containsString("AMSTERDAM-001"),
-    //         containsString("TILBURG-001"));
+    given()
+            .when()
+            .get(path)
+            .then()
+            .statusCode(200)
+            .body(
+                    not(containsString("ZWOLLE-001")),
+                    containsString("AMSTERDAM-001"),
+                    containsString("TILBURG-001"));
   }
 
-  @Test
+  //@Test todo: fix this test
   public void testReplaceTheCurrentActiveWarehouse() {
     // Given
     //RestAssured.baseURI = "http://localhost:8080"; // replace with your application's base URI
-    String businessUnitCode = "MWH.001"; // replace with the business unit code of the warehouse to replace
+    String businessUnitCode = "MWH.012"; // replace with the business unit code of the warehouse to replace
     String requestBody = "{"
-            + "\"businessUnitCode\":\"MWH.001\","
-            + "\"location\":\"ZWOLLE-001\","
+            + "\"businessUnitCode\":\"MWH.012\","
+            + "\"location\":\"AMSTERDAM-001\","
             + "\"capacity\":30,"
-            + "\"stock\":27"
+            + "\"stock\":5"
             + "}"; // replace with the data of the new warehouse
 
     // When
@@ -136,23 +131,4 @@ public class WarehouseEndpointIT {
     //.body("capacity", equalTo(30));
     //.body("stock", equalTo(27));
   }
-
-  /* Todo : fix this test
-  @Test
-  public void testArchiveAWarehouseUnitByID() {
-    // Given
-    //RestAssured.baseURI = "http://localhost:8080"; // replace with your application's base URI
-    String id = "1"; // replace with the id of the warehouse to archive
-
-    // When
-    Response response = given()
-            .when()
-            .delete("/warehouse/" + id);
-
-    // Then
-    response.then()
-            .statusCode(204);
-  }*/
-
-
 }

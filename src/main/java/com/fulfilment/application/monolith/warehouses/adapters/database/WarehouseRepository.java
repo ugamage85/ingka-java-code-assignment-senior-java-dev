@@ -23,8 +23,8 @@ public class WarehouseRepository implements WarehouseStore, PanacheRepository<Db
   @Override
   public void create(Warehouse warehouse) {
     var warehouseEntity = warehouseMapper.toEntity(warehouse);
-    warehouseEntity.setCreatedAt(LocalDateTime.now());
-    warehouseEntity.setArchivedAt(null);
+    //warehouseEntity.setCreatedAt(LocalDateTime.now());
+    //warehouseEntity.setArchivedAt(null);
     this.persist(warehouseEntity);
   }
 

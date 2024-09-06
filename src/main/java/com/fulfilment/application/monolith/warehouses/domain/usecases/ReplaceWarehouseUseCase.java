@@ -56,7 +56,7 @@ public class ReplaceWarehouseUseCase implements ReplaceWarehouseOperation {
     // If all checks pass, replace the existing warehouse with the new one
     newWarehouse.setCreatedAt(existingWarehouse.getCreatedAt());
     newWarehouse.setArchivedAt(null);
-    warehouseStore.update(newWarehouse);
+    warehouseStore.create(newWarehouse);
 
   }
 }
