@@ -12,73 +12,47 @@ import static org.hamcrest.Matchers.not;
 
 @QuarkusIntegrationTest
 public class WarehouseEndpointIT {
+  private static final String PATH = "warehouse";
 
   @Test
   public void testSimpleListWarehouses() {
-
-    final String path = "warehouse";
-
     // List all, should have all 3 products the database has initially:
     given()
             .when()
-            .get(path)
+            .get(PATH)
             .then()
             .statusCode(200)
             .body(containsString("MWH.001"), containsString("MWH.012"), containsString("MWH.023"));
   }
 
-  //@Test
+  @Test
   public void testGetAWarehouseUnitByID() {
-    // Define the warehouse id
-    String warehouseId = "1";
-
+    String warehouseId = "2";
     // Send the GET request to get the warehouse
     given()
             .contentType(ContentType.JSON)
             .when()
-            .get("/warehouse/" + warehouseId)
+            .get(PATH +"/"+ warehouseId)
             .then()
             .statusCode(200)
-            .body("businessUnitCode", equalTo("MWH.001"))
-            .body("location", equalTo("ZWOLLE-001"))
-            .body("capacity", equalTo(100))
-            .body("stock", equalTo(10));
+            .body("businessUnitCode", equalTo("MWH.012"))
+            .body("location", equalTo("AMSTERDAM-001"))
+            .body("capacity", equalTo(50))
+            .body("stock", equalTo(5));
   }
 
   @Test
   @Transactional
   public void testCreateANewWarehouseUnit() {
-    String newWarehouseJson = "{"
-            + "\"businessUnitCode\": \"MWH.101\","
-            + "\"location\": \"AMSTERDAM-001\","
-            + "\"capacity\": 90,"
-            + "\"stock\": 50"
-            + "}";
-
-    // Send the POST request to create the warehouse
-    given()
-            .contentType(ContentType.JSON)
-            .body(newWarehouseJson)
-            .when()
-            .post("/warehouse")
-            .then()
-            .statusCode(200)
-            .body("businessUnitCode", equalTo("MWH.101"))
-            .body("location", equalTo("AMSTERDAM-001"))
-            .body("capacity", equalTo(90))
-            .body("stock", equalTo(50));
-    //.body("id", notNullValue())
-
+    createNewWarehouse("MWH.101", "AMSTERDAM-001", 90, 50);
   }
 
   @Test
   public void testSimpleCheckingArchivingWarehouses() {
-    final String path = "warehouse";
-
     // List all, should have all 3 products the database has initially:
     given()
             .when()
-            .get(path)
+            .get(PATH)
             .then()
             .statusCode(200)
             .body(
@@ -89,13 +63,13 @@ public class WarehouseEndpointIT {
                     containsString("AMSTERDAM-001"),
                     containsString("TILBURG-001"));
 
-    // // Archive the ZWOLLE-001:
-    given().when().delete(path + "/1").then().statusCode(204);
+    // Archive the ZWOLLE-001:
+    given().when().delete(PATH + "/1").then().statusCode(204);
 
-    // // List all, ZWOLLE-001 should be missing now:
+    // List all, ZWOLLE-001 should be missing now:
     given()
             .when()
-            .get(path)
+            .get(PATH)
             .then()
             .statusCode(200)
             .body(
@@ -105,43 +79,54 @@ public class WarehouseEndpointIT {
   }
 
   @Test
+  @Transactional
   public void testReplaceTheCurrentActiveWarehouse() {
     // create a new warehouse
+    createNewWarehouse("MWH.102", "AMSTERDAM-001", 90, 50);
+
+    // Replace the warehouse (see capacity and stock)
+    replaceWarehouse("MWH.102", "AMSTERDAM-001", 80, 50);
+  }
+
+  private void createNewWarehouse(String businessUnitCode, String location, int capacity, int stock) {
     String newWarehouseJson = "{"
-            + "\"businessUnitCode\": \"MWH.102\","
-            + "\"location\": \"AMSTERDAM-001\","
-            + "\"capacity\": 90,"
-            + "\"stock\": 50"
+            + "\"businessUnitCode\": \"" + businessUnitCode + "\","
+            + "\"location\": \"" + location + "\","
+            + "\"capacity\": " + capacity + ","
+            + "\"stock\": " + stock
             + "}";
 
-    // Send the POST request to create the warehouse
     given()
             .contentType(ContentType.JSON)
             .body(newWarehouseJson)
             .when()
-            .post("/warehouse")
+            .post(PATH)
             .then()
-            .statusCode(200);
+            .statusCode(200)
+            .body("businessUnitCode", equalTo(businessUnitCode))
+            .body("location", equalTo(location))
+            .body("capacity", equalTo(capacity))
+            .body("stock", equalTo(stock));
+  }
 
-    // Replace the warehouse
+  private void replaceWarehouse(String businessUnitCode, String location, int capacity, int stock) {
     String replacingWarehouseJson = "{"
-            + "\"businessUnitCode\": \"MWH.102\","
-            + "\"location\": \"AMSTERDAM-001\","
-            + "\"capacity\": 90,"
-            + "\"stock\": 50"
+            + "\"businessUnitCode\": \"" + businessUnitCode + "\","
+            + "\"location\": \"" + location + "\","
+            + "\"capacity\": " + capacity + ","
+            + "\"stock\": " + stock
             + "}";
 
-    // Send the POST request to replace the warehouse
-   given()
+    given()
             .contentType(ContentType.JSON)
             .body(replacingWarehouseJson)
             .when()
-            .post("/warehouse/MWH.102/replacement")
+            .post(PATH + "/" + businessUnitCode + "/replacement")
             .then()
             .statusCode(200)
-            .body("businessUnitCode", equalTo("MWH.102"))
-            .body("location", equalTo("AMSTERDAM-001"))
-            .body("capacity", equalTo(90))
-            .body("stock", equalTo(50));
+            .body("businessUnitCode", equalTo(businessUnitCode))
+            .body("location", equalTo(location))
+            .body("capacity", equalTo(capacity))
+            .body("stock", equalTo(stock));
   }
 }
