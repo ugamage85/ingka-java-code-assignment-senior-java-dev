@@ -44,7 +44,7 @@ public class WarehouseEndpointIT {
   @Test
   @Transactional
   public void testCreateANewWarehouseUnit() {
-    createNewWarehouse("MWH.101", "AMSTERDAM-001", 90, 50);
+    createNewWarehouse("123","MWH.101", "AMSTERDAM-001", 90, 50);
   }
 
   @Test
@@ -82,14 +82,15 @@ public class WarehouseEndpointIT {
   @Transactional
   public void testReplaceTheCurrentActiveWarehouse() {
     // create a new warehouse
-    createNewWarehouse("MWH.102", "AMSTERDAM-001", 90, 50);
+    createNewWarehouse("123","MWH.102", "AMSTERDAM-001", 90, 50);
 
     // Replace the warehouse (see capacity and stock)
     replaceWarehouse("MWH.102", "AMSTERDAM-001", 80, 50);
   }
 
-  private void createNewWarehouse(String businessUnitCode, String location, int capacity, int stock) {
+  private void createNewWarehouse(String id, String businessUnitCode, String location, int capacity, int stock) {
     String newWarehouseJson = "{"
+            + "\"id\": \"" + id + "\","
             + "\"businessUnitCode\": \"" + businessUnitCode + "\","
             + "\"location\": \"" + location + "\","
             + "\"capacity\": " + capacity + ","
@@ -103,6 +104,7 @@ public class WarehouseEndpointIT {
             .post(PATH)
             .then()
             .statusCode(200)
+            .body("id", equalTo(id)) // fake verification as the id is auto-generated. But still this verifies the id field is present in the response.
             .body("businessUnitCode", equalTo(businessUnitCode))
             .body("location", equalTo(location))
             .body("capacity", equalTo(capacity))

@@ -107,6 +107,9 @@ components:
     Warehouse:
       type: object
       properties:
+        id:
+          type: string
+          example: "123"
         businessUnitCode:
           type: string
           example: "MWH.001"
