@@ -5,6 +5,8 @@ import com.fulfilment.application.monolith.warehouses.domain.ports.ArchiveWareho
 import com.fulfilment.application.monolith.warehouses.domain.ports.WarehouseStore;
 import jakarta.enterprise.context.ApplicationScoped;
 
+import java.time.LocalDateTime;
+
 @ApplicationScoped
 public class ArchiveWarehouseUseCase implements ArchiveWarehouseOperation {
 
@@ -16,8 +18,18 @@ public class ArchiveWarehouseUseCase implements ArchiveWarehouseOperation {
 
   @Override
   public void archive(Warehouse warehouse) {
-    // TODO implement this method
+    //Two things can be done here
+    //  1. Set the archivedAt field to the current time
+    //  2. Remove the warehouse from the database
+    //Since the WarehouseResource implementation(of archiveAWarehouseUnitByID) removes the warehouse from the database, I decided to do the same here
+    //so, it is further support to preserve businessUnitCode uniqueness after the new warehouse is created.
 
-    warehouseStore.update(warehouse);
+    //warehouse.setArchivedAt(LocalDateTime.now());
+    //warehouseStore.update(warehouse);
+
+    if (warehouse == null) {
+      throw new IllegalArgumentException("Warehouse cannot be null");
+    }
+    warehouseStore.remove(warehouse);
   }
 }

@@ -64,8 +64,6 @@ public class StoreResource {
       legacyStoreManagerGateway.createStoreOnLegacySystem(store);
     }));
 
-    //legacyStoreManagerGateway.createStoreOnLegacySystem(store);
-
     return Response.ok(store).status(201).build();
   }
 
@@ -86,7 +84,9 @@ public class StoreResource {
     entity.name = updatedStore.name;
     entity.quantityProductsInStock = updatedStore.quantityProductsInStock;
 
-    legacyStoreManagerGateway.updateStoreOnLegacySystem(updatedStore);
+    transactionSynchronizationRegistry.registerInterposedSynchronization(new AfterCommitExecutor(() -> {
+      legacyStoreManagerGateway.updateStoreOnLegacySystem(updatedStore);
+    }));
 
     return entity;
   }

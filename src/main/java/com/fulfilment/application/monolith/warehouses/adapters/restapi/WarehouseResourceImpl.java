@@ -3,20 +3,30 @@ package com.fulfilment.application.monolith.warehouses.adapters.restapi;
 import com.fulfilment.application.monolith.mapper.WarehouseMapper;
 import com.fulfilment.application.monolith.warehouses.adapters.database.DbWarehouse;
 import com.fulfilment.application.monolith.warehouses.adapters.database.WarehouseRepository;
+import com.fulfilment.application.monolith.warehouses.domain.ports.CreateWarehouseOperation;
+import com.fulfilment.application.monolith.warehouses.domain.ports.ReplaceWarehouseOperation;
+import com.fulfilment.application.monolith.warehouses.domain.usecases.ArchiveWarehouseUseCase;
 import com.warehouse.api.WarehouseResource;
 import com.warehouse.api.beans.Warehouse;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.WebApplicationException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 @RequestScoped
+@Slf4j
 public class WarehouseResourceImpl implements WarehouseResource {
 
   @Inject private WarehouseRepository warehouseRepository;
   @Inject private WarehouseMapper warehouseMapper;
+  @Inject private CreateWarehouseOperation createWarehouseOperation;
+  @Inject private ReplaceWarehouseOperation replaceWarehouseOperation;
+  @Inject private ArchiveWarehouseUseCase archiveWarehouseUseCase;
+
 
   @Override
   public List<Warehouse> listAllWarehousesUnits() {
@@ -24,9 +34,10 @@ public class WarehouseResourceImpl implements WarehouseResource {
   }
 
   @Override
+  @Transactional
   public Warehouse createANewWarehouseUnit(@NotNull Warehouse data) {
     com.fulfilment.application.monolith.warehouses.domain.models.Warehouse model = warehouseMapper.toModel(data);
-    warehouseRepository.create(model);
+    createWarehouseOperation.create(model);
     return data;
   }
 
@@ -40,19 +51,23 @@ public class WarehouseResourceImpl implements WarehouseResource {
   }
 
   @Override
+  @Transactional
   public void archiveAWarehouseUnitByID(String id) {
     DbWarehouse entity = warehouseRepository.findById(Long.parseLong(id));
     if (entity == null) {
       throw new WebApplicationException("Warehouse with id of " + id + " does not exist.", 404);
     }
-    warehouseRepository.remove(warehouseMapper.toModel(entity));
+    //warehouseRepository.remove(warehouseMapper.toModel(entity));
+    archiveWarehouseUseCase.archive(warehouseMapper.toModel(entity));
   }
 
   @Override
+  @Transactional
   public Warehouse replaceTheCurrentActiveWarehouse(String businessUnitCode, @NotNull Warehouse data) {
-    com.fulfilment.application.monolith.warehouses.domain.models.Warehouse existingModel = warehouseRepository.findByBusinessUnitCode(businessUnitCode);
-    warehouseRepository.update(existingModel);
-    return toWarehouseResponse(existingModel);
+    com.fulfilment.application.monolith.warehouses.domain.models.Warehouse newWarehouse = warehouseMapper.toModel(data);
+    newWarehouse.setBusinessUnitCode(businessUnitCode);
+    replaceWarehouseOperation.replace(newWarehouse);
+    return data;
   }
 
   private Warehouse toWarehouseResponse(
