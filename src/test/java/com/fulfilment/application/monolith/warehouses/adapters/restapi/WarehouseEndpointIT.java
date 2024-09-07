@@ -1,16 +1,14 @@
 package com.fulfilment.application.monolith.warehouses.adapters.restapi;
 
-import com.warehouse.api.beans.Warehouse;
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @QuarkusIntegrationTest
 public class WarehouseEndpointIT {
@@ -29,45 +27,47 @@ public class WarehouseEndpointIT {
             .body(containsString("MWH.001"), containsString("MWH.012"), containsString("MWH.023"));
   }
 
-  @Test
-  public void shouldFindWarehouseById() {
+  //@Test
+  public void testGetAWarehouseUnitByID() {
+    // Define the warehouse id
+    String warehouseId = "1";
 
-    final String path = "warehouse";
-    //(1, 'MWH.001', 'ZWOLLE-001', 100, 10, '2024-07-01', null)
-    //given().when().get(path + "/1").then().statusCode(200);
-
-    // List all, should have all 3 products the database has initially:
-    var response = given()
+    // Send the GET request to get the warehouse
+    given()
+            .contentType(ContentType.JSON)
             .when()
-            .get(path)
+            .get("/warehouse/" + warehouseId)
             .then()
-            .extract().response();
-    assertEquals(200, response.getStatusCode());
-    //.statusCode(200)
-    //.body(containsString("MWH.001"));
+            .statusCode(200)
+            .body("businessUnitCode", equalTo("MWH.001"))
+            .body("location", equalTo("ZWOLLE-001"))
+            .body("capacity", equalTo(100))
+            .body("stock", equalTo(10));
   }
 
   @Test
   @Transactional
-  public void shouldCreateWarehouse() {
+  public void testCreateANewWarehouseUnit() {
+    String newWarehouseJson = "{"
+            + "\"businessUnitCode\": \"MWH.101\","
+            + "\"location\": \"AMSTERDAM-001\","
+            + "\"capacity\": 90,"
+            + "\"stock\": 50"
+            + "}";
 
-    final String path = "warehouse";
-    Warehouse warehouse = new Warehouse();
-    warehouse.setBusinessUnitCode("MWH.100");
-    warehouse.setLocation("AMSTERDAM-001");
-    warehouse.setCapacity(30);
-    warehouse.setStock(10);
-
+    // Send the POST request to create the warehouse
     given()
             .contentType(ContentType.JSON)
-            .body(warehouse)
+            .body(newWarehouseJson)
             .when()
-            .post(path)
+            .post("/warehouse")
             .then()
-            .statusCode(200);
+            .statusCode(200)
+            .body("businessUnitCode", equalTo("MWH.101"))
+            .body("location", equalTo("AMSTERDAM-001"))
+            .body("capacity", equalTo(90))
+            .body("stock", equalTo(50));
     //.body("id", notNullValue())
-    //.body("name", is("Integration Test Store"))
-    //.body("quantityProductsInStock", is(200));
 
   }
 
@@ -104,31 +104,44 @@ public class WarehouseEndpointIT {
                     containsString("TILBURG-001"));
   }
 
-  //@Test todo: fix this test
+  @Test
   public void testReplaceTheCurrentActiveWarehouse() {
-    // Given
-    //RestAssured.baseURI = "http://localhost:8080"; // replace with your application's base URI
-    String businessUnitCode = "MWH.012"; // replace with the business unit code of the warehouse to replace
-    String requestBody = "{"
-            + "\"businessUnitCode\":\"MWH.012\","
-            + "\"location\":\"AMSTERDAM-001\","
-            + "\"capacity\":30,"
-            + "\"stock\":5"
-            + "}"; // replace with the data of the new warehouse
+    // create a new warehouse
+    String newWarehouseJson = "{"
+            + "\"businessUnitCode\": \"MWH.102\","
+            + "\"location\": \"AMSTERDAM-001\","
+            + "\"capacity\": 90,"
+            + "\"stock\": 50"
+            + "}";
 
-    // When
-    Response response = given()
+    // Send the POST request to create the warehouse
+    given()
             .contentType(ContentType.JSON)
-            .body(requestBody)
+            .body(newWarehouseJson)
             .when()
-            .post("/warehouse/" + businessUnitCode + "/replacement");
-
-    // Then
-    response.then()
+            .post("/warehouse")
+            .then()
             .statusCode(200);
-            //.body("businessUnitCode", equalTo("MWH.001"))
-            //.body("location", equalTo("TILBURG-001"));
-    //.body("capacity", equalTo(30));
-    //.body("stock", equalTo(27));
+
+    // Replace the warehouse
+    String replacingWarehouseJson = "{"
+            + "\"businessUnitCode\": \"MWH.102\","
+            + "\"location\": \"AMSTERDAM-001\","
+            + "\"capacity\": 90,"
+            + "\"stock\": 50"
+            + "}";
+
+    // Send the POST request to replace the warehouse
+   given()
+            .contentType(ContentType.JSON)
+            .body(replacingWarehouseJson)
+            .when()
+            .post("/warehouse/MWH.102/replacement")
+            .then()
+            .statusCode(200)
+            .body("businessUnitCode", equalTo("MWH.102"))
+            .body("location", equalTo("AMSTERDAM-001"))
+            .body("capacity", equalTo(90))
+            .body("stock", equalTo(50));
   }
 }

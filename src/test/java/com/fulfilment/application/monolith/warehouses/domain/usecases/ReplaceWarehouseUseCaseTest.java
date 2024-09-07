@@ -44,7 +44,7 @@ public class ReplaceWarehouseUseCaseTest {
 
         replaceWarehouseUseCase.replace(newWarehouse);
 
-        verify(warehouseStore, times(1)).update(newWarehouse);
+        verify(warehouseStore, times(1)).create(newWarehouse);
         verify(archiveWarehouseOperation, times(1)).archive(existingWarehouse);
     }
 
