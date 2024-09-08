@@ -19,9 +19,14 @@ public enum ErrorRule {
     WAREHOUSE_CAPACITY_NOT_ENOUGH(Response.Status.CONFLICT,"New warehouse's capacity cannot accommodate the stock from the warehouse being replaced", ErrorCode.WAREHOUSE_CAPACITY_NOT_ENOUGH),
     WAREHOUSE_STOCK_MISMATCH(Response.Status.CONFLICT,"Stock of the new warehouse does not match the stock of the previous warehouse", ErrorCode.WAREHOUSE_STOCK_MISMATCH),
     MAX_WAREHOUSE_NUMBER_REACHED(Response.Status.CONFLICT,"Maximum number of warehouses reached", ErrorCode.MAX_WAREHOUSE_NUMBER_REACHED),
+    BUSINESS_UNIT_CODE_NOT_MATCH(Response.Status.CONFLICT,"BusinessUnitCode not match", ErrorCode.BUSINESS_UNIT_CODE_NOT_MATCH),
+
+
+
     //404
     WAREHOUSE_NOT_FOUND(Response.Status.NOT_FOUND,"Warehouse with the provided BusinessUnitCode not found", ErrorCode.WAREHOUSE_NOT_FOUND),
     WAREHOUSE_LOCATION_EXCEEDED_MAX_CAPACTY(Response.Status.CONFLICT,"Warehouse with provided location exceeded max capacity", ErrorCode.WAREHOUSE_LOCATION_EXCEEDED_MAX_CAPACTY);
+
     private final Response.Status httpStatus;
     private final String description;
     private final ErrorCode code;

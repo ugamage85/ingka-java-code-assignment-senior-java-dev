@@ -63,6 +63,9 @@ public class WarehouseResourceImpl implements WarehouseResource {
   @Override
   @Transactional
   public Warehouse replaceTheCurrentActiveWarehouse(String businessUnitCode, @NotNull Warehouse data) {
+    if (businessUnitCode != null && !businessUnitCode.equals(data.getBusinessUnitCode())) {
+      throw new WarehouseException(ErrorRule.BUSINESS_UNIT_CODE_NOT_MATCH, "Business Unit Code in path and in request body do not match.");
+    }
     com.fulfilment.application.monolith.warehouses.domain.models.Warehouse newWarehouse = warehouseMapper.toModel(data);
     newWarehouse.setBusinessUnitCode(businessUnitCode);
     replaceWarehouseOperation.replace(newWarehouse);
