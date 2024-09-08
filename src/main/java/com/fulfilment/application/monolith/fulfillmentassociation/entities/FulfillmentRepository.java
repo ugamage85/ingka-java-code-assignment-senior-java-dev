@@ -17,4 +17,11 @@ public class FulfillmentRepository implements PanacheRepository<FulfillmentAssoc
     public List<FulfillmentAssociation> findByStoreAndProduct(Long storeId, Long productId) {
         return find("store.id = ?1 AND product.id = ?2", storeId, productId).list();
     }
+
+    public long countProductsInWarehouse(Long warehouseId) {
+        return this.count("SELECT COUNT(DISTINCT f.product.id) FROM FulfillmentAssociation f JOIN f.warehouses w WHERE w.id = ?1", warehouseId);
+    }
+
+
+
 }
