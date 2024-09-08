@@ -1,5 +1,7 @@
 package com.fulfilment.application.monolith.warehouses.adapters.restapi;
 
+import com.fulfilment.application.monolith.exceptions.ErrorRule;
+import com.fulfilment.application.monolith.exceptions.WarehouseException;
 import com.fulfilment.application.monolith.mapper.WarehouseMapper;
 import com.fulfilment.application.monolith.warehouses.adapters.database.DbWarehouse;
 import com.fulfilment.application.monolith.warehouses.adapters.database.WarehouseRepository;
@@ -21,11 +23,16 @@ import java.util.List;
 @Slf4j
 public class WarehouseResourceImpl implements WarehouseResource {
 
-  @Inject private WarehouseRepository warehouseRepository;
-  @Inject private WarehouseMapper warehouseMapper;
-  @Inject private CreateWarehouseOperation createWarehouseOperation;
-  @Inject private ReplaceWarehouseOperation replaceWarehouseOperation;
-  @Inject private ArchiveWarehouseUseCase archiveWarehouseUseCase;
+  @Inject
+  private WarehouseRepository warehouseRepository;
+  @Inject
+  private WarehouseMapper warehouseMapper;
+  @Inject
+  private CreateWarehouseOperation createWarehouseOperation;
+  @Inject
+  private ReplaceWarehouseOperation replaceWarehouseOperation;
+  @Inject
+  private ArchiveWarehouseUseCase archiveWarehouseUseCase;
 
 
   @Override
@@ -36,6 +43,7 @@ public class WarehouseResourceImpl implements WarehouseResource {
   @Override
   @Transactional
   public Warehouse createANewWarehouseUnit(@NotNull Warehouse data) {
+    requestValidation(data);
     com.fulfilment.application.monolith.warehouses.domain.models.Warehouse model = warehouseMapper.toModel(data);
     createWarehouseOperation.create(model);
     return data;
@@ -71,7 +79,7 @@ public class WarehouseResourceImpl implements WarehouseResource {
   }
 
   private Warehouse toWarehouseResponse(
-      com.fulfilment.application.monolith.warehouses.domain.models.Warehouse warehouse) {
+          com.fulfilment.application.monolith.warehouses.domain.models.Warehouse warehouse) {
     var response = new Warehouse();
     response.setBusinessUnitCode(warehouse.getBusinessUnitCode());
     response.setLocation(warehouse.getLocation());
@@ -79,5 +87,20 @@ public class WarehouseResourceImpl implements WarehouseResource {
     response.setStock(warehouse.getStock());
 
     return response;
+  }
+
+  private void requestValidation(Warehouse data) {
+    if (data.getBusinessUnitCode() == null) {
+      throw new WarehouseException(ErrorRule.FIELD_IS_REQUIRED, "Business Unit Code was not set on request.");
+    }
+    if (data.getLocation() == null) {
+      throw new WarehouseException(ErrorRule.FIELD_IS_REQUIRED, "Location was not set on request.");
+    }
+    if (data.getCapacity() == null) {
+      throw new WarehouseException(ErrorRule.FIELD_IS_REQUIRED, "Capacity was not set on request.");
+    }
+    if (data.getStock() == null) {
+      throw new WarehouseException(ErrorRule.FIELD_IS_REQUIRED, "Stock  was not set on request.");
+    }
   }
 }

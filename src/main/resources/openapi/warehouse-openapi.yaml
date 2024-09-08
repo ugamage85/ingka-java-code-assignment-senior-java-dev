@@ -122,3 +122,5 @@ components:
         stock:
           type: integer
           example: 50
+        required:
+          - businessUnitCode

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 public class ProductEndpointTest {
 
-  @Test
+ @Test
   public void testCrudProduct() {
     final String path = "product";
 
