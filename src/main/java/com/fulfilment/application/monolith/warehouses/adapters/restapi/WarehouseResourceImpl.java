@@ -11,27 +11,26 @@ import com.fulfilment.application.monolith.warehouses.domain.usecases.ArchiveWar
 import com.warehouse.api.WarehouseResource;
 import com.warehouse.api.beans.Warehouse;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @RequestScoped
-@Slf4j
+@RequiredArgsConstructor
 public class WarehouseResourceImpl implements WarehouseResource {
 
-  @Inject
-  private WarehouseRepository warehouseRepository;
-  @Inject
-  private WarehouseMapper warehouseMapper;
-  @Inject
-  private CreateWarehouseOperation createWarehouseOperation;
-  @Inject
-  private ReplaceWarehouseOperation replaceWarehouseOperation;
-  @Inject
-  private ArchiveWarehouseUseCase archiveWarehouseUseCase;
+
+  private final WarehouseRepository warehouseRepository;
+
+  private final WarehouseMapper warehouseMapper;
+
+  private final CreateWarehouseOperation createWarehouseOperation;
+
+  private final ReplaceWarehouseOperation replaceWarehouseOperation;
+
+  private final ArchiveWarehouseUseCase archiveWarehouseUseCase;
 
 
   @Override
