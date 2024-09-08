@@ -28,7 +28,6 @@ public class ReplaceWarehouseUseCase implements ReplaceWarehouseOperation {
 
     // Check if the existing warehouse exists and is not archived
     if (existingWarehouse.getArchivedAt() != null) {
-      //throw new WebApplicationException("Warehouse with Business Unit Code " + newWarehouse.getBusinessUnitCode() + " not found or is archived", 404);
       throw new WarehouseException(WAREHOUSE_ALREADY_ARCHIVED, "Warehouse with Business Unit Code " + newWarehouse.getBusinessUnitCode() + " is already archived");
     }
 
