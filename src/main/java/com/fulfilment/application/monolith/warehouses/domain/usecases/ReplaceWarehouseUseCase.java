@@ -1,13 +1,15 @@
 package com.fulfilment.application.monolith.warehouses.domain.usecases;
 
+import com.fulfilment.application.monolith.exceptions.WarehouseException;
 import com.fulfilment.application.monolith.warehouses.domain.models.Warehouse;
 import com.fulfilment.application.monolith.warehouses.domain.ports.ArchiveWarehouseOperation;
 import com.fulfilment.application.monolith.warehouses.domain.ports.ReplaceWarehouseOperation;
 import com.fulfilment.application.monolith.warehouses.domain.ports.WarehouseStore;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.ws.rs.WebApplicationException;
 
-import java.time.LocalDateTime;
+import static com.fulfilment.application.monolith.exceptions.ErrorRule.WAREHOUSE_ALREADY_ARCHIVED;
+import static com.fulfilment.application.monolith.exceptions.ErrorRule.WAREHOUSE_CAPACITY_NOT_ENOUGH;
+import static com.fulfilment.application.monolith.exceptions.ErrorRule.WAREHOUSE_STOCK_MISMATCH;
 
 @ApplicationScoped
 public class ReplaceWarehouseUseCase implements ReplaceWarehouseOperation {
@@ -20,34 +22,24 @@ public class ReplaceWarehouseUseCase implements ReplaceWarehouseOperation {
     this.archiveWarehouseOperation = archiveWarehouseOperation;
   }
 
-  /**
-   * <p>
-   * Replaces the current active Warehouse identified by
-   * <code>businessUnitCode</code> unit by a new Warehouse provided in the request
-   * body A Warehouse can be replaced by another Warehouse with the same Business
-   * Unit Code. That means that the previous Warehouse will be archived and the
-   * new Warehouse will be created assuming its place.
-   * </p>
-   *
-   */
-
   @Override
   public void replace(Warehouse newWarehouse) {
     Warehouse existingWarehouse = warehouseStore.findByBusinessUnitCode(newWarehouse.getBusinessUnitCode());
 
     // Check if the existing warehouse exists and is not archived
-    if (existingWarehouse == null || existingWarehouse.getArchivedAt() != null) {
-      throw new WebApplicationException("Warehouse with Business Unit Code " + newWarehouse.getBusinessUnitCode() + " not found or is archived", 404);
+    if (existingWarehouse.getArchivedAt() != null) {
+      //throw new WebApplicationException("Warehouse with Business Unit Code " + newWarehouse.getBusinessUnitCode() + " not found or is archived", 404);
+      throw new WarehouseException(WAREHOUSE_ALREADY_ARCHIVED, "Warehouse with Business Unit Code " + newWarehouse.getBusinessUnitCode() + " is already archived");
     }
 
     // Validate if the new warehouse's capacity can accommodate the stock from the warehouse being replaced
     if (newWarehouse.getCapacity() < existingWarehouse.getStock()) {
-      throw new WebApplicationException("New warehouse's capacity cannot accommodate the stock from the warehouse being replaced", 400);
+      throw new WarehouseException(WAREHOUSE_CAPACITY_NOT_ENOUGH);
     }
 
     // Confirm that the stock of the new warehouse matches the stock of the previous warehouse
     if (!newWarehouse.getStock().equals(existingWarehouse.getStock())) {
-      throw new WebApplicationException("Stock of the new warehouse does not match the stock of the previous warehouse", 400);
+      throw new WarehouseException(WAREHOUSE_STOCK_MISMATCH);
     }
 
     //archive the existing warehouse.

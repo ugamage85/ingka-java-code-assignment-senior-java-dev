@@ -14,7 +14,6 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.WebApplicationException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -52,9 +51,6 @@ public class WarehouseResourceImpl implements WarehouseResource {
   @Override
   public Warehouse getAWarehouseUnitByID(String id) {
     DbWarehouse entity = warehouseRepository.findById(Long.parseLong(id));
-    if (entity == null) {
-      throw new WebApplicationException("Warehouse with id of " + id + " does not exist.", 404);
-    }
     return toWarehouseResponse(warehouseMapper.toModel(entity));
   }
 
@@ -62,10 +58,6 @@ public class WarehouseResourceImpl implements WarehouseResource {
   @Transactional
   public void archiveAWarehouseUnitByID(String id) {
     DbWarehouse entity = warehouseRepository.findById(Long.parseLong(id));
-    if (entity == null) {
-      throw new WebApplicationException("Warehouse with id of " + id + " does not exist.", 404);
-    }
-    //warehouseRepository.remove(warehouseMapper.toModel(entity));
     archiveWarehouseUseCase.archive(warehouseMapper.toModel(entity));
   }
 

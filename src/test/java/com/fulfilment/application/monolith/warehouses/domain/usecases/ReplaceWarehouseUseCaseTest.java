@@ -1,5 +1,6 @@
 package com.fulfilment.application.monolith.warehouses.domain.usecases;
 
+import com.fulfilment.application.monolith.exceptions.WarehouseException;
 import com.fulfilment.application.monolith.warehouses.domain.models.Warehouse;
 import com.fulfilment.application.monolith.warehouses.domain.ports.ArchiveWarehouseOperation;
 import com.fulfilment.application.monolith.warehouses.domain.ports.WarehouseStore;
@@ -53,9 +54,9 @@ public class ReplaceWarehouseUseCaseTest {
     public void shouldThrowExceptionWhenWarehouseDoesNotExist() {
         Warehouse newWarehouse = new Warehouse("BU-001", "ZWOLLE-001", 60, 30, null, null);
 
-        when(warehouseStore.findByBusinessUnitCode("BU-001")).thenReturn(null);
+        when(warehouseStore.findByBusinessUnitCode("BU-001")).thenThrow(WarehouseException.class);
 
-        assertThrows(WebApplicationException.class, () -> replaceWarehouseUseCase.replace(newWarehouse));
+        assertThrows(WarehouseException.class, () -> replaceWarehouseUseCase.replace(newWarehouse));
     }
 
     @Test
@@ -66,7 +67,7 @@ public class ReplaceWarehouseUseCaseTest {
 
         when(warehouseStore.findByBusinessUnitCode("BU-001")).thenReturn(existingWarehouse);
 
-        assertThrows(WebApplicationException.class, () -> replaceWarehouseUseCase.replace(newWarehouse));
+        assertThrows(WarehouseException.class, () -> replaceWarehouseUseCase.replace(newWarehouse));
     }
 
     @Test
@@ -77,7 +78,7 @@ public class ReplaceWarehouseUseCaseTest {
 
         when(warehouseStore.findByBusinessUnitCode("BU-001")).thenReturn(existingWarehouse);
 
-        assertThrows(WebApplicationException.class, () -> replaceWarehouseUseCase.replace(newWarehouse));
+        assertThrows(WarehouseException.class, () -> replaceWarehouseUseCase.replace(newWarehouse));
     }
 
     @Test
@@ -88,7 +89,7 @@ public class ReplaceWarehouseUseCaseTest {
 
         when(warehouseStore.findByBusinessUnitCode("BU-001")).thenReturn(existingWarehouse);
 
-        assertThrows(WebApplicationException.class, () -> replaceWarehouseUseCase.replace(newWarehouse));
+        assertThrows(WarehouseException.class, () -> replaceWarehouseUseCase.replace(newWarehouse));
     }
 
 }
