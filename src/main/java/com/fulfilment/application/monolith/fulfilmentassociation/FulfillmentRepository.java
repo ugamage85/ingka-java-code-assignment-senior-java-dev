@@ -1,11 +1,12 @@
-package com.fulfilment.application.monolith.fulfillmentassociation.entities;
+package com.fulfilment.application.monolith.fulfilmentassociation;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
+
 @ApplicationScoped
-public class FulfillmentRepository implements PanacheRepository<FulfillmentAssociation>{
+public class FulfillmentRepository implements PanacheRepository<FulfillmentAssociation> {
     public long countByStore(Long storeId) {
         return count("store.id", storeId);
     }
@@ -21,7 +22,5 @@ public class FulfillmentRepository implements PanacheRepository<FulfillmentAssoc
     public long countProductsInWarehouse(Long warehouseId) {
         return this.count("SELECT COUNT(DISTINCT f.product.id) FROM FulfillmentAssociation f JOIN f.warehouses w WHERE w.id = ?1", warehouseId);
     }
-
-
 
 }

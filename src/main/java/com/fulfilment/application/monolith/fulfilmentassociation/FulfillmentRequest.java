@@ -1,4 +1,4 @@
-package com.fulfilment.application.monolith.fulfillmentassociation.entities;
+package com.fulfilment.application.monolith.fulfilmentassociation;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

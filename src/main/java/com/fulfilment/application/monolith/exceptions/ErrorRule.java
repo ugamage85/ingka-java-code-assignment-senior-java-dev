@@ -2,9 +2,6 @@ package com.fulfilment.application.monolith.exceptions;
 
 import jakarta.ws.rs.core.Response;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-import static jakarta.ws.rs.core.Response.Status.fromStatusCode;
 
 @Getter
 //@RequiredArgsConstructor
@@ -20,12 +17,14 @@ public enum ErrorRule {
     WAREHOUSE_STOCK_MISMATCH(Response.Status.CONFLICT,"Stock of the new warehouse does not match the stock of the previous warehouse", ErrorCode.WAREHOUSE_STOCK_MISMATCH),
     MAX_WAREHOUSE_NUMBER_REACHED(Response.Status.CONFLICT,"Maximum number of warehouses reached", ErrorCode.MAX_WAREHOUSE_NUMBER_REACHED),
     BUSINESS_UNIT_CODE_NOT_MATCH(Response.Status.CONFLICT,"BusinessUnitCode not match", ErrorCode.BUSINESS_UNIT_CODE_NOT_MATCH),
+    WAREHOUSE_LOCATION_EXCEEDED_MAX_CAPACTY(Response.Status.CONFLICT,"Warehouse with provided location exceeded max capacity", ErrorCode.WAREHOUSE_LOCATION_EXCEEDED_MAX_CAPACTY),
 
-
-
+    FULFILLMENT_ALREADY_EXIST(Response.Status.CONFLICT,"Fulfillment with the provided storeId, productId, warehouses already exist", ErrorCode.FULFILLMENT_ALREADY_EXIST),
+    PRODUCT_FULFILMENT_MAX_WAREHOUSES_PER_STORE_EXCEEDED(Response.Status.CONFLICT,"A product can be fulfilled by up to 2 warehouses per store", ErrorCode.PRODUCT_FULFILMENT_MAX_WAREHOUSES_PER_STORE_EXCEEDED)
+    ,STORE_FULFILMENT_MAX_WAREHOUSES_EXCEEDED(Response.Status.CONFLICT,"A store can be fulfilled by up to 3 warehouses", ErrorCode.STORE_FULFILMENT_MAX_WAREHOUSES_EXCEEDED),
+    WAREHOUSE_MAX_PRODUCT_TYPES_EXCEEDED(Response.Status.CONFLICT,"Warehouse can store up to 5 types of products", ErrorCode.WAREHOUSE_MAX_PRODUCT_TYPES_EXCEEDED),
     //404
-    WAREHOUSE_NOT_FOUND(Response.Status.NOT_FOUND,"Warehouse with the provided BusinessUnitCode not found", ErrorCode.WAREHOUSE_NOT_FOUND),
-    WAREHOUSE_LOCATION_EXCEEDED_MAX_CAPACTY(Response.Status.CONFLICT,"Warehouse with provided location exceeded max capacity", ErrorCode.WAREHOUSE_LOCATION_EXCEEDED_MAX_CAPACTY);
+    WAREHOUSE_NOT_FOUND(Response.Status.NOT_FOUND,"Warehouse with the provided BusinessUnitCode not found", ErrorCode.WAREHOUSE_NOT_FOUND);
 
     private final Response.Status httpStatus;
     private final String description;
