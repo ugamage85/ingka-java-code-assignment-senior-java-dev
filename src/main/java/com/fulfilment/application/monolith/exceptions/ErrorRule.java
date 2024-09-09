@@ -23,8 +23,11 @@ public enum ErrorRule {
     PRODUCT_FULFILMENT_MAX_WAREHOUSES_PER_STORE_EXCEEDED(Response.Status.CONFLICT,"A product can be fulfilled by up to 2 warehouses per store", ErrorCode.PRODUCT_FULFILMENT_MAX_WAREHOUSES_PER_STORE_EXCEEDED)
     ,STORE_FULFILMENT_MAX_WAREHOUSES_EXCEEDED(Response.Status.CONFLICT,"A store can be fulfilled by up to 3 warehouses", ErrorCode.STORE_FULFILMENT_MAX_WAREHOUSES_EXCEEDED),
     WAREHOUSE_MAX_PRODUCT_TYPES_EXCEEDED(Response.Status.CONFLICT,"Warehouse can store up to 5 types of products", ErrorCode.WAREHOUSE_MAX_PRODUCT_TYPES_EXCEEDED),
+
     //404
-    WAREHOUSE_NOT_FOUND(Response.Status.NOT_FOUND,"Warehouse with the provided BusinessUnitCode not found", ErrorCode.WAREHOUSE_NOT_FOUND);
+    WAREHOUSE_NOT_FOUND(Response.Status.NOT_FOUND,"Warehouse with the provided BusinessUnitCode not found", ErrorCode.WAREHOUSE_NOT_FOUND),
+    PRODUCT_NOT_FOUND(Response.Status.NOT_FOUND,"Product with the provided id not found", ErrorCode.PRODUCT_NOT_FOUND),
+    STORE_NOT_FOUND(Response.Status.NOT_FOUND,"Store with the provided id not found", ErrorCode.STORE_NOT_FOUND);
 
     private final Response.Status httpStatus;
     private final String description;

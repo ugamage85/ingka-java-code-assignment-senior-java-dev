@@ -3,38 +3,45 @@ package com.fulfilment.application.monolith.fulfilmentassociation;
 import com.fulfilment.application.monolith.exceptions.ErrorRule;
 import com.fulfilment.application.monolith.exceptions.FulfillmentException;
 import com.fulfilment.application.monolith.fulfilmentassociation.domain.Fulfillment;
+import com.fulfilment.application.monolith.fulfilmentassociation.validatior.FulfilmentValidator;
 import com.fulfilment.application.monolith.products.Product;
 import com.fulfilment.application.monolith.products.ProductRepository;
 import com.fulfilment.application.monolith.stores.Store;
 import com.fulfilment.application.monolith.warehouses.adapters.database.DbWarehouse;
 import com.fulfilment.application.monolith.warehouses.adapters.database.WarehouseRepository;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @ApplicationScoped
+@RequiredArgsConstructor
 public class FulfillmentService {
+    private final FulfillmentRepository fulfillmentRepository;
+   private final WarehouseRepository warehouseRepository;
+    private final ProductRepository productRepository;
 
-    @Inject
-    FulfillmentRepository fulfillmentRepository;
-
-    @Inject
-    WarehouseRepository warehouseRepository;
-
-    @Inject
-    ProductRepository productRepository;
+    private final List<FulfilmentValidator> validators;
 
     @Transactional
     public FulfillmentAssociation createFulfillment(Fulfillment fulfillment) {
         Long storeId = fulfillment.getStoreId();
         Long productId = fulfillment.getProductId();
         List<Long> warehouseIds = fulfillment.getWarehouseIds();
+
         Store store = Store.findById(storeId);
+        if(store == null){
+            throw new FulfillmentException(ErrorRule.STORE_NOT_FOUND);
+        }
+
         Product product = productRepository.findById(productId);
+        if(product == null){
+            throw new FulfillmentException(ErrorRule.PRODUCT_NOT_FOUND);
+        }
+
         List<DbWarehouse> warehouses = warehouseRepository.list("id IN ?1", warehouseIds);
 
         if (isFulfillmentDuplicate(storeId, productId, warehouseIds)) {
@@ -42,31 +49,17 @@ public class FulfillmentService {
         }
 
 
-        validateProductFulfillment(storeId, productId, warehouseIds);
+        /*validateProductFulfillment(storeId, productId, warehouseIds);
         validateStoreFulfillment(storeId, warehouseIds);
-        validateWarehouseFulfillment(warehouseIds);
+        validateWarehouseFulfillment(warehouseIds);*/
 
-       /* if (warehouses.size() > 2) {
-            throw new IllegalStateException("A product can be fulfilled by up to 2 warehouses per store.");
-        }
-
-        if (fulfillmentRepository.countByStore(storeId) >= 3) {
-            throw new IllegalStateException("A store can be fulfilled by up to 3 warehouses.");
-        }
-
-        for (DbWarehouse warehouse : warehouses) {
-            if (warehouseRepository.countProductsInWarehouse(warehouse.id) >= 5) {
-                throw new IllegalStateException("Warehouse can store up to 5 types of products.");
-            }
-        }*/
+        validators.stream().allMatch(validator -> validator.validate(fulfillment));
 
         FulfillmentAssociation fulfillmentAssociation = new FulfillmentAssociation();
         fulfillmentAssociation.setStore(store);
         fulfillmentAssociation.setProduct(product);
         fulfillmentAssociation.setWarehouses(warehouses);
-
         fulfillmentRepository.persist(fulfillmentAssociation);
-
         return fulfillmentAssociation;
     }
 
@@ -95,7 +88,8 @@ public class FulfillmentService {
     private void validateWarehouseFulfillment(List<Long> warehouseIds) {
         var uniqueWarehouseIds = getUniqueWarehouseIds(warehouseIds);
         for (Long warehouseId : uniqueWarehouseIds) {
-            if (fulfillmentRepository.countProductsInWarehouse(warehouseId) >= 5) {
+           DbWarehouse warehouse =  warehouseRepository.findById(warehouseId);
+            if (warehouse!= null && fulfillmentRepository.countProductsInWarehouse(warehouseId) >= 5) {
                 throw new FulfillmentException(ErrorRule.WAREHOUSE_MAX_PRODUCT_TYPES_EXCEEDED);
             }
         }
