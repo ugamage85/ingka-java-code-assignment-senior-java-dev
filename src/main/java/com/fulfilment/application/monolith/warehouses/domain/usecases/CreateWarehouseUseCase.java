@@ -11,7 +11,6 @@ import java.util.List;
 
 @ApplicationScoped
 public class CreateWarehouseUseCase implements CreateWarehouseOperation {
-
   private final WarehouseStore warehouseStore;
   private final LocationResolver locationResolver;
   private final List<CreateWarehouseValidator> validators;

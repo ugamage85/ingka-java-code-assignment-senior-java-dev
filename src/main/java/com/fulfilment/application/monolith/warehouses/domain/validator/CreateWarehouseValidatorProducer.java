@@ -9,8 +9,6 @@ import java.util.List;
 @ApplicationScoped
 @RequiredArgsConstructor
 public class CreateWarehouseValidatorProducer {
-
-
     @Produces
     public List<CreateWarehouseValidator> produceCreateWarehouseValidators(ExistsByBuCodeValidator existsByBuCodeValidator,
                                                                            LocationValidator locationValidator,

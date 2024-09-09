@@ -20,18 +20,11 @@ import java.util.List;
 @RequestScoped
 @RequiredArgsConstructor
 public class WarehouseResourceImpl implements WarehouseResource {
-
-
   private final WarehouseRepository warehouseRepository;
-
   private final WarehouseMapper warehouseMapper;
-
   private final CreateWarehouseOperation createWarehouseOperation;
-
   private final ReplaceWarehouseOperation replaceWarehouseOperation;
-
   private final ArchiveWarehouseUseCase archiveWarehouseUseCase;
-
 
   @Override
   public List<Warehouse> listAllWarehousesUnits() {
@@ -79,7 +72,6 @@ public class WarehouseResourceImpl implements WarehouseResource {
     response.setLocation(warehouse.getLocation());
     response.setCapacity(warehouse.getCapacity());
     response.setStock(warehouse.getStock());
-
     return response;
   }
 

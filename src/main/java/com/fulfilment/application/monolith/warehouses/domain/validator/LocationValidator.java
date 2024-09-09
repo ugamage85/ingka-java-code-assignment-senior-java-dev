@@ -3,7 +3,6 @@ package com.fulfilment.application.monolith.warehouses.domain.validator;
 import com.fulfilment.application.monolith.warehouses.domain.models.Warehouse;
 import com.fulfilment.application.monolith.warehouses.domain.ports.LocationResolver;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.ws.rs.WebApplicationException;
 import lombok.RequiredArgsConstructor;
 
 @ApplicationScoped

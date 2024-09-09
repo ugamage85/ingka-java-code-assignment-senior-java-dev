@@ -20,7 +20,7 @@ public class FeasibilityValidator  implements CreateWarehouseValidator {
     @Override
     public boolean validate(Warehouse warehouse) {
         var location = locationResolver.resolveByIdentifier(warehouse.getLocation());
-        var nofWarehousesInLocation = warehouseStore.getAll().stream().filter(item -> item.getLocation().equals(location.getIdentification())).count();
+        var nofWarehousesInLocation =warehouseStore.getAll().stream().filter(item -> item.getLocation().equals(location.getIdentification())).count();
         if (location.getMaxNumberOfWarehouses() < nofWarehousesInLocation) {
             throw new WarehouseException(MAX_WAREHOUSE_NUMBER_REACHED);
         }

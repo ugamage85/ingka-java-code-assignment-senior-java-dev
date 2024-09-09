@@ -5,6 +5,7 @@ import com.fulfilment.application.monolith.fulfillment.domain.service.Fulfillmen
 import com.fulfilment.application.monolith.fulfillment.adaptors.database.FulfillmentAssociation;
 import com.fulfilment.application.monolith.fulfillment.domain.model.Fulfillment;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -26,6 +27,7 @@ public class FulfillmentResource {
     FulfillmentService fulfillmentService;
 
     @POST
+    @Transactional
     public Response createFulfillment(FulfillmentRequest request) {
         Fulfillment fulfillment = toModel(request);
         FulfillmentAssociation fulfillmentAssociation = fulfillmentService.createFulfillment(fulfillment);
@@ -39,6 +41,7 @@ public class FulfillmentResource {
     }
 
     @DELETE
+    @Transactional
     @Path("/{id}")
     public Response deleteFulfillment(@PathParam("id") Long id) {
         fulfillmentService.deleteFulfillment(id);

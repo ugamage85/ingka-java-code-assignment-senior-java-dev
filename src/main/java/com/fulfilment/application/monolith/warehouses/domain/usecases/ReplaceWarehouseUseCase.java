@@ -13,7 +13,6 @@ import static com.fulfilment.application.monolith.exceptions.ErrorRule.WAREHOUSE
 
 @ApplicationScoped
 public class ReplaceWarehouseUseCase implements ReplaceWarehouseOperation {
-
   private final WarehouseStore warehouseStore;
   private final ArchiveWarehouseOperation archiveWarehouseOperation;
 

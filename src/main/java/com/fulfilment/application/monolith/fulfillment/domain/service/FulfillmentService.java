@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FulfillmentService {
     private final FulfillmentRepository fulfillmentRepository;
-   private final WarehouseRepository warehouseRepository;
+    private final WarehouseRepository warehouseRepository;
     private final ProductRepository productRepository;
 
     private final List<FulfilmentValidator> validators;
@@ -33,18 +33,17 @@ public class FulfillmentService {
         List<Long> warehouseIds = fulfillment.getWarehouseIds();
 
         Store store = Store.findById(storeId);
-        if(store == null){
+        if (store == null) {
             throw new FulfillmentException(ErrorRule.STORE_NOT_FOUND);
         }
 
         Product product = productRepository.findById(productId);
-        if(product == null){
+        if (product == null) {
             throw new FulfillmentException(ErrorRule.PRODUCT_NOT_FOUND);
         }
 
         List<DbWarehouse> warehouses = warehouseRepository.list("id IN ?1", warehouseIds);
         validators.stream().allMatch(validator -> validator.validate(fulfillment));
-
         FulfillmentAssociation fulfillmentAssociation = new FulfillmentAssociation();
         fulfillmentAssociation.setStore(store);
         fulfillmentAssociation.setProduct(product);
@@ -66,12 +65,11 @@ public class FulfillmentService {
         if (fulfillment != null) {
             fulfillmentRepository.delete(fulfillment);
         } else {
-            throw new IllegalArgumentException("Fulfillment with id " + id + " does not exist");
+            throw new FulfillmentException(ErrorRule.FULFILLMENT_NOT_FOUND);
         }
     }
 
     public List<FulfillmentAssociation> getAllFulfillments() {
         return fulfillmentRepository.listAll();
     }
-
 }

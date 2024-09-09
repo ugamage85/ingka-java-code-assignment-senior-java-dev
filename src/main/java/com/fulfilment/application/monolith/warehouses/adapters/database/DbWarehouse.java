@@ -1,12 +1,6 @@
 package com.fulfilment.application.monolith.warehouses.adapters.database;
 
-import com.fulfilment.application.monolith.warehouses.domain.models.Warehouse;
-import jakarta.persistence.Cacheable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

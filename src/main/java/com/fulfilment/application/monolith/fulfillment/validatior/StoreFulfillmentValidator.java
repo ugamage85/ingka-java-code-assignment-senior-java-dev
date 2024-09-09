@@ -7,6 +7,7 @@ import com.fulfilment.application.monolith.fulfillment.domain.model.Fulfillment;
 import com.fulfilment.application.monolith.fulfillment.utils.FulfilmentUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
+
 @RequiredArgsConstructor
 @ApplicationScoped
 public class StoreFulfillmentValidator implements FulfilmentValidator {

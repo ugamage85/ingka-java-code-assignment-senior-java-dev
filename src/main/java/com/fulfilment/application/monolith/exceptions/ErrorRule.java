@@ -27,6 +27,7 @@ public enum ErrorRule {
     //404
     WAREHOUSE_NOT_FOUND(Response.Status.NOT_FOUND,"Warehouse with the provided BusinessUnitCode not found", ErrorCode.WAREHOUSE_NOT_FOUND),
     PRODUCT_NOT_FOUND(Response.Status.NOT_FOUND,"Product with the provided id not found", ErrorCode.PRODUCT_NOT_FOUND),
+    FULFILLMENT_NOT_FOUND(Response.Status.NOT_FOUND,"Fulfillment with the provided id not found", ErrorCode.FULFILLMENT_NOT_FOUND),
     STORE_NOT_FOUND(Response.Status.NOT_FOUND,"Store with the provided id not found", ErrorCode.STORE_NOT_FOUND);
 
     private final Response.Status httpStatus;

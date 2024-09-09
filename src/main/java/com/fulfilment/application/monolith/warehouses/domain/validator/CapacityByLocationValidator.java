@@ -6,14 +6,12 @@ import com.fulfilment.application.monolith.warehouses.domain.ports.LocationResol
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 
-import static com.fulfilment.application.monolith.exceptions.ErrorRule.WAREHOUSE_CAPACITY_NOT_ENOUGH;
 import static com.fulfilment.application.monolith.exceptions.ErrorRule.WAREHOUSE_LOCATION_EXCEEDED_MAX_CAPACTY;
 
 @ApplicationScoped
 @RequiredArgsConstructor
 public class CapacityByLocationValidator implements CreateWarehouseValidator {
     private final LocationResolver locationResolver;
-
 
     @Override
     public boolean validate(Warehouse warehouse) {
