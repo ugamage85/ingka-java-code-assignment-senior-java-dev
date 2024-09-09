@@ -1,4 +1,4 @@
-package com.fulfilment.application.monolith.fulfillment;
+package com.fulfilment.application.monolith.fulfillment.adaptors.database;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;

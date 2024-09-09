@@ -2,8 +2,8 @@ package com.fulfilment.application.monolith.fulfillment.validatior;
 
 import com.fulfilment.application.monolith.exceptions.ErrorRule;
 import com.fulfilment.application.monolith.exceptions.FulfillmentException;
-import com.fulfilment.application.monolith.fulfillment.FulfillmentRepository;
-import com.fulfilment.application.monolith.fulfillment.domain.Fulfillment;
+import com.fulfilment.application.monolith.fulfillment.adaptors.database.FulfillmentRepository;
+import com.fulfilment.application.monolith.fulfillment.domain.model.Fulfillment;
 import com.fulfilment.application.monolith.fulfillment.utils.FulfilmentUtil;
 import com.fulfilment.application.monolith.warehouses.adapters.database.DbWarehouse;
 import com.fulfilment.application.monolith.warehouses.adapters.database.WarehouseRepository;

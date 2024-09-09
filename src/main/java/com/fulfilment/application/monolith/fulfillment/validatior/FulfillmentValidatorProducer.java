@@ -8,7 +8,7 @@ import java.util.List;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-public class CreateFulfillmentValidatorProducer {
+public class FulfillmentValidatorProducer {
     @Produces
     public List<FulfilmentValidator> produceFulfillmentValidators(ProductFulfillmentValidator productFulfillmentValidator,
                                                                           StoreFulfillmentValidator storeFulfillmentValidator, WarehouseFulfillmentValidator warehouseFulfillmentValidator) {
