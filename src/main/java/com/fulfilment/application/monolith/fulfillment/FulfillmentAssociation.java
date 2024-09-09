@@ -1,4 +1,4 @@
-package com.fulfilment.application.monolith.fulfilmentassociation;
+package com.fulfilment.application.monolith.fulfillment;
 
 import com.fulfilment.application.monolith.products.Product;
 import com.fulfilment.application.monolith.stores.Store;

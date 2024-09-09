@@ -1,9 +1,9 @@
-package com.fulfilment.application.monolith.fulfilmentassociation;
+package com.fulfilment.application.monolith.fulfillment;
 
 import com.fulfilment.application.monolith.exceptions.ErrorRule;
 import com.fulfilment.application.monolith.exceptions.FulfillmentException;
-import com.fulfilment.application.monolith.fulfilmentassociation.domain.Fulfillment;
-import com.fulfilment.application.monolith.fulfilmentassociation.validatior.FulfilmentValidator;
+import com.fulfilment.application.monolith.fulfillment.domain.Fulfillment;
+import com.fulfilment.application.monolith.fulfillment.validatior.FulfilmentValidator;
 import com.fulfilment.application.monolith.products.Product;
 import com.fulfilment.application.monolith.products.ProductRepository;
 import com.fulfilment.application.monolith.stores.Store;

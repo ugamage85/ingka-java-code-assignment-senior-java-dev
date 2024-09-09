@@ -1,4 +1,4 @@
-package com.fulfilment.application.monolith.fulfilmentassociation.domain;
+package com.fulfilment.application.monolith.fulfillment.domain;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

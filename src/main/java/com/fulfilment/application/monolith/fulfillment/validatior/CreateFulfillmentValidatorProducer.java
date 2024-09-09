@@ -1,10 +1,5 @@
-package com.fulfilment.application.monolith.fulfilmentassociation.validatior;
+package com.fulfilment.application.monolith.fulfillment.validatior;
 
-import com.fulfilment.application.monolith.warehouses.domain.validator.CapacityByLocationValidator;
-import com.fulfilment.application.monolith.warehouses.domain.validator.CreateWarehouseValidator;
-import com.fulfilment.application.monolith.warehouses.domain.validator.ExistsByBuCodeValidator;
-import com.fulfilment.application.monolith.warehouses.domain.validator.FeasibilityValidator;
-import com.fulfilment.application.monolith.warehouses.domain.validator.LocationValidator;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import lombok.RequiredArgsConstructor;

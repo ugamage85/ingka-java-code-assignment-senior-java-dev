@@ -1,4 +1,4 @@
-package com.fulfilment.application.monolith.fulfilmentassociation.utils;
+package com.fulfilment.application.monolith.fulfillment.utils;
 
 import java.util.HashSet;
 import java.util.List;

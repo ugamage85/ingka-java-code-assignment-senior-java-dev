@@ -1,10 +1,10 @@
-package com.fulfilment.application.monolith.fulfilmentassociation.validatior;
+package com.fulfilment.application.monolith.fulfillment.validatior;
 
 import com.fulfilment.application.monolith.exceptions.ErrorRule;
 import com.fulfilment.application.monolith.exceptions.FulfillmentException;
-import com.fulfilment.application.monolith.fulfilmentassociation.FulfillmentRepository;
-import com.fulfilment.application.monolith.fulfilmentassociation.domain.Fulfillment;
-import com.fulfilment.application.monolith.fulfilmentassociation.utils.FulfilmentUtil;
+import com.fulfilment.application.monolith.fulfillment.FulfillmentRepository;
+import com.fulfilment.application.monolith.fulfillment.domain.Fulfillment;
+import com.fulfilment.application.monolith.fulfillment.utils.FulfilmentUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor

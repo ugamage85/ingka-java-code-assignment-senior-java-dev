@@ -1,6 +1,6 @@
-package com.fulfilment.application.monolith.fulfilmentassociation;
+package com.fulfilment.application.monolith.fulfillment;
 
-import com.fulfilment.application.monolith.fulfilmentassociation.domain.Fulfillment;
+import com.fulfilment.application.monolith.fulfillment.domain.Fulfillment;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
