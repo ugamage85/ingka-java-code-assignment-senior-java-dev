@@ -4,7 +4,6 @@ import com.fulfilment.application.monolith.warehouses.domain.models.Location;
 import com.fulfilment.application.monolith.warehouses.domain.ports.LocationResolver;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.WebApplicationException;
-import util.LocationGatewayException;
 
 import java.util.ArrayList;
 import java.util.List;

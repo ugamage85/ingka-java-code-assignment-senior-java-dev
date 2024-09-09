@@ -21,7 +21,7 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import java.util.List;
 import org.jboss.logging.Logger;
-import util.AfterCommitExecutor;
+import com.fulfilment.application.monolith.util.AfterCommitExecutor;
 
 @Path("store")
 @ApplicationScoped
