@@ -10,8 +10,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FulfillmentValidatorProducer {
     @Produces
-    public List<FulfilmentValidator> produceFulfillmentValidators(ProductFulfillmentValidator productFulfillmentValidator,
+    public List<FulfilmentValidator> produceFulfillmentValidators(DuplicateFulfillmentValidator duplicateFulfillmentValidator,ProductFulfillmentValidator productFulfillmentValidator,
                                                                           StoreFulfillmentValidator storeFulfillmentValidator, WarehouseFulfillmentValidator warehouseFulfillmentValidator) {
-        return List.of(productFulfillmentValidator, storeFulfillmentValidator, warehouseFulfillmentValidator);
+        return List.of(duplicateFulfillmentValidator, productFulfillmentValidator, storeFulfillmentValidator, warehouseFulfillmentValidator);
     }
 }

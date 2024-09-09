@@ -45,16 +45,6 @@ public class FulfillmentService {
         }
 
         List<DbWarehouse> warehouses = warehouseRepository.list("id IN ?1", warehouseIds);
-
-        if (isFulfillmentDuplicate(storeId, productId, warehouseIds)) {
-            throw new FulfillmentException(ErrorRule.FULFILLMENT_ALREADY_EXIST);
-        }
-
-
-        /*validateProductFulfillment(storeId, productId, warehouseIds);
-        validateStoreFulfillment(storeId, warehouseIds);
-        validateWarehouseFulfillment(warehouseIds);*/
-
         validators.stream().allMatch(validator -> validator.validate(fulfillment));
 
         FulfillmentAssociation fulfillmentAssociation = new FulfillmentAssociation();
@@ -72,45 +62,18 @@ public class FulfillmentService {
             return fulfillmentRepository.listAll();
         }
     }
-    private void validateProductFulfillment(Long storeId, Long productId, List<Long> warehouseIds) {
-        var uniqueWarehouseIds = getUniqueWarehouseIds(warehouseIds);
-        List<FulfillmentAssociation> existingFulfillments = fulfillmentRepository.findByStoreAndProduct(storeId, productId);
-        if (existingFulfillments.size() + uniqueWarehouseIds.size() > 2) {
-            throw new FulfillmentException(ErrorRule.PRODUCT_FULFILMENT_MAX_WAREHOUSES_PER_STORE_EXCEEDED);
+
+    public void deleteFulfillment(Long id) {
+        FulfillmentAssociation fulfillment = fulfillmentRepository.findById(id);
+        if (fulfillment != null) {
+            fulfillmentRepository.delete(fulfillment);
+        } else {
+            throw new IllegalArgumentException("Fulfillment with id " + id + " does not exist");
         }
     }
 
-    private void validateStoreFulfillment(Long storeId, List<Long> warehouseIds) {
-        var uniqueWarehouseIds = getUniqueWarehouseIds(warehouseIds);
-        if (fulfillmentRepository.countByStore(storeId) + uniqueWarehouseIds.size() > 3) {
-            throw new FulfillmentException(ErrorRule.STORE_FULFILMENT_MAX_WAREHOUSES_EXCEEDED);
-        }
+    public List<FulfillmentAssociation> getAllFulfillments() {
+        return fulfillmentRepository.listAll();
     }
 
-    private void validateWarehouseFulfillment(List<Long> warehouseIds) {
-        var uniqueWarehouseIds = getUniqueWarehouseIds(warehouseIds);
-        for (Long warehouseId : uniqueWarehouseIds) {
-           DbWarehouse warehouse =  warehouseRepository.findById(warehouseId);
-            if (warehouse!= null && fulfillmentRepository.countProductsInWarehouse(warehouseId) >= 5) {
-                throw new FulfillmentException(ErrorRule.WAREHOUSE_MAX_PRODUCT_TYPES_EXCEEDED);
-            }
-        }
-    }
-
-    private Set<Long> getUniqueWarehouseIds(List<Long> warehouseIds) {
-        Set<Long> uniqueWarehouseIds = new HashSet<>(warehouseIds);
-        //return uniqueWarehouseIds.size() == warehouseIds.size();
-        return uniqueWarehouseIds;
-    }
-
-    private boolean isFulfillmentDuplicate(Long storeId, Long productId, List<Long> warehouseIds) {
-        var uniqueWarehouseIds = getUniqueWarehouseIds(warehouseIds);
-        List<FulfillmentAssociation> existingFulfillments = fulfillmentRepository.findByStoreAndProduct(storeId, productId);
-        for (FulfillmentAssociation existingFulfillment : existingFulfillments) {
-            if (existingFulfillment.getWarehouses().stream().map(DbWarehouse::getId).toList().containsAll(uniqueWarehouseIds)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

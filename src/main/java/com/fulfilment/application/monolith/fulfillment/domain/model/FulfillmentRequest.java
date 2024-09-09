@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 @RequiredArgsConstructor
 public class FulfillmentRequest {
-    private Long storeId;
-    private Long productId;
-    private List<Long> warehouseIds;
+    private   final Long storeId;
+    private  final Long productId;
+    private final  List<Long> warehouseIds;
 }
