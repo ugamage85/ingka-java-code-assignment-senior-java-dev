@@ -29,7 +29,7 @@ public class FulfillmentResource {
     public Response createFulfillment(FulfillmentRequest request) {
         Fulfillment fulfillment = toModel(request);
         FulfillmentAssociation fulfillmentAssociation = fulfillmentService.createFulfillment(fulfillment);
-        return Response.status(Response.Status.CREATED).entity(fulfillment).build();
+        return Response.status(Response.Status.CREATED).entity(fulfillmentAssociation).build();
     }
 
     @GET
